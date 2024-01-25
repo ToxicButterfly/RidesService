@@ -1,0 +1,21 @@
+package com.example.ridesservice.dto.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PassengerRequestForRide {
+
+    private Integer passId;
+    private Integer coorX;
+    private Integer coorY;
+    private Integer coor2X;
+    private Integer coor2Y;
+    private Float passRating;
+
+}

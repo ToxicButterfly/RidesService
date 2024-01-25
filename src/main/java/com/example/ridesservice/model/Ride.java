@@ -3,6 +3,7 @@ package com.example.ridesservice.model;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.codecs.pojo.annotations.BsonId;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Document(collection = "ride")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Ride {
 
     @Transient
@@ -27,11 +29,9 @@ public class Ride {
     private Double length;
     private Long tripDuration;
     private Date tripDate;
-    private Integer driver_id;
+    private Integer driverId;
     private Float driverRating;
-    private Integer passenger_id;
+    private Integer passengerId;
     private Float passengerRating;
     private Float cost;
-    //TODO make payment
-//    private Integer payment_id;
 }

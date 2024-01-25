@@ -1,5 +1,6 @@
 package com.example.ridesservice.controller;
 
+import com.example.ridesservice.dto.request.PassengerRequestForRide;
 import com.example.ridesservice.model.Location;
 import com.example.ridesservice.service.RidesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ public class RidesController {
     @Autowired
     RidesService ridesService;
 
-    @PostMapping("createTrip/{id}")
-    public void createTrip(@RequestBody Location location, @PathVariable int id) {
-        ridesService.createTrip(location, id);
+    @PostMapping("createTrip")
+    public void createTrip(@RequestBody PassengerRequestForRide request) {
+        ridesService.createTrip(request);
     }
 }

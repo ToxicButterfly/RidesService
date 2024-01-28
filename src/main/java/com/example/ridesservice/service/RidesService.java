@@ -1,10 +1,7 @@
 package com.example.ridesservice.service;
 
 import com.example.ridesservice.dao.RidesDAO;
-import com.example.ridesservice.dto.request.DelegatePaymentRequest;
-import com.example.ridesservice.dto.request.PassengerRequestForRide;
-import com.example.ridesservice.dto.request.RideRequest;
-import com.example.ridesservice.feign.DriverMessagesInterface;
+import com.example.ridesservice.dto.request.*;
 import com.example.ridesservice.kafka.RidesProducer;
 import com.example.ridesservice.model.Ride;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +19,6 @@ public class RidesService {
     @Autowired
     RidesDAO ridesDAO;
     @Autowired
-    DriverMessagesInterface driverMessageInterface;
-    @Autowired
     private SequenceGeneratorService service;
     private final RidesProducer ridesProducer;
 
@@ -39,21 +34,29 @@ public class RidesService {
                 .tripDuration(System.currentTimeMillis()-time/1000)
                 .build();
         Ride savedRide = ridesDAO.save(ride);
-        ridesProducer.sendMessage(savedRide.getId());
+        ridesProducer.sendMessage(new DriverRequest(savedRide.getId()));
     }
 
     public void provideTrip(RideRequest request) {
+
         Ride ride = ridesDAO.findById(request.getRideId()).get();
         ride.setDriverId(request.getDriverId());
         ride.setDriverRating(request.getDriverRating());
         Ride paidRide = remit(ride);
         ridesDAO.save(ride);
+        DelegateRatingRequest ratingRequest = DelegateRatingRequest.builder()
+                .rideId(ride.getId())
+                .driverId(ride.getDriverId())
+                .passId(ride.getPassengerId())
+                .build();
+        ridesProducer.delegateRating(ratingRequest);
     }
 
     private Ride remit(Ride ride) {
         float cost = (float) Math.round((int) Math.ceil(ride.getDriverRating()) * ride.getLength() * 100)/100;
         ride.setCost(cost);
         DelegatePaymentRequest request = DelegatePaymentRequest.builder()
+                .rideId(ride.getId())
                 .driverId(ride.getDriverId())
                 .passId(ride.getPassengerId())
                 .cost(cost)

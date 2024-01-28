@@ -1,0 +1,34 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: rides-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: ridesdb
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: rideGroup
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+topic:
+  name:
+    driver: driver-search
+    payment: payment-delegate
+    rating: rating-delegate
+kafka:
+  partitions:
+    count: 1
+  replicas:
+    count: 1

@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
-@Data
 public class RideRequest {
 
     private Integer rideId;

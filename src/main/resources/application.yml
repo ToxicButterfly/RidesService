@@ -29,6 +29,6 @@ topic:
     rating: rating-delegate
 kafka:
   partitions:
-    count: 1
+    count: 5
   replicas:
     count: 1

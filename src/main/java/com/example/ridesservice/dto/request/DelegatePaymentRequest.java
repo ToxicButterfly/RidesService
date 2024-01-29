@@ -2,7 +2,6 @@ package com.example.ridesservice.dto.request;
 
 import lombok.*;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

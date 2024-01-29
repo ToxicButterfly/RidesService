@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
 
 @Builder
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 public class RideRequest {
 
     private Integer rideId;

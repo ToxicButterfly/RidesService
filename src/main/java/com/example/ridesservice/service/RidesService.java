@@ -1,6 +1,6 @@
 package com.example.ridesservice.service;
 
-import com.example.ridesservice.dao.RidesDAO;
+import com.example.ridesservice.repo.RidesRepo;
 import com.example.ridesservice.dto.request.*;
 import com.example.ridesservice.kafka.RidesProducer;
 import com.example.ridesservice.model.Ride;
@@ -16,13 +16,12 @@ import static java.lang.Math.sqrt;
 @RequiredArgsConstructor
 public class RidesService {
 
-    @Autowired
-    RidesDAO ridesDAO;
-    @Autowired
-    private SequenceGeneratorService service;
+    final RidesRepo ridesRepo;
+    private final SequenceGeneratorService service;
     private final RidesProducer ridesProducer;
 
     public void createTrip(PassengerRequestForRide request) {
+
         long time = System.currentTimeMillis();
         double length = sqrt(Math.pow(request.getCoor2X()- request.getCoorX(), 2) + Math.pow(request.getCoor2Y()- request.getCoorY(),2));
         Ride ride = Ride.builder()
@@ -33,17 +32,17 @@ public class RidesService {
                 .passengerRating(request.getPassRating())
                 .tripDuration(System.currentTimeMillis()-time/1000)
                 .build();
-        Ride savedRide = ridesDAO.save(ride);
+        Ride savedRide = ridesRepo.save(ride);
         ridesProducer.sendMessage(new DriverRequest(savedRide.getId()));
     }
 
     public void provideTrip(RideRequest request) {
 
-        Ride ride = ridesDAO.findById(request.getRideId()).get();
+        Ride ride = ridesRepo.findById(request.getRideId()).get();
         ride.setDriverId(request.getDriverId());
         ride.setDriverRating(request.getDriverRating());
         Ride paidRide = remit(ride);
-        ridesDAO.save(ride);
+        ridesRepo.save(ride);
         DelegateRatingRequest ratingRequest = DelegateRatingRequest.builder()
                 .rideId(ride.getId())
                 .driverId(ride.getDriverId())

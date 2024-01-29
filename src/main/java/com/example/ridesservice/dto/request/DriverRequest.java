@@ -5,8 +5,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class DriverRequest {
     private Integer id;
 }

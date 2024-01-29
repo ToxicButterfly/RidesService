@@ -1,7 +1,7 @@
-package com.example.ridesservice.dao;
+package com.example.ridesservice.repo;
 
 import com.example.ridesservice.model.Ride;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface RidesDAO extends MongoRepository<Ride, Integer> {
+public interface RidesRepo extends MongoRepository<Ride, Integer> {
 }

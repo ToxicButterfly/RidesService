@@ -15,7 +15,7 @@ public class DriverConsumer {
 
     private final RidesService ridesService;
 
-    @KafkaListener(topics = "driver-available", groupId = "rideGroup")
+    @KafkaListener(topics = "${topic.name.driverResponse}")
     public void receiveMessage(RideRequest request) {
         log.info("Received message: {}", request.toString());
         ridesService.provideTrip(request);

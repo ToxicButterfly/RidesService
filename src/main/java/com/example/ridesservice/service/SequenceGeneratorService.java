@@ -1,6 +1,7 @@
 package com.example.ridesservice.service;
 
 import com.example.ridesservice.model.DbSequence;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,10 +15,10 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 
 
 @Service
+@RequiredArgsConstructor
 public class SequenceGeneratorService {
 
-    @Autowired
-    private MongoOperations mongoOperations;
+    private final MongoOperations mongoOperations;
     public int getSequenceNumber(String sequenceName) {
         Query query = new Query(Criteria.where("id").is(sequenceName));
         Update update = new Update().inc("seq", 1);

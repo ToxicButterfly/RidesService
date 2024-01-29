@@ -9,7 +9,7 @@ spring:
       port: 27017
       database: ridesdb
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: validate
   kafka:
@@ -18,10 +18,16 @@ spring:
       group-id: rideGroup
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json:
+          trusted.packages: "*"
+          type.mapping: RideRequest:com.example.ridesservice.dto.request.RideRequest
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: ratingDelegation:com.example.ridesservice.dto.request.DelegateRatingRequest, paymentDelegation:com.example.ridesservice.dto.request.DelegatePaymentRequest, DriverRequest:com.example.ridesservice.dto.request.DriverRequest
 topic:
   name:
     driver: driver-search

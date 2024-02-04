@@ -7,9 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class DelegatePaymentRequest {
-
     private Integer rideId;
     private Integer passId;
     private Integer driverId;
     private Float cost;
+
 }

@@ -20,7 +20,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class Ride {
-
     @Transient
     public static final String SEQUENCE_NAME = "users_sequence";
 

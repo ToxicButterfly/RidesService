@@ -7,7 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PassengerRequestForRide {
-
     private Integer passId;
     private Integer coorX;
     private Integer coorY;

@@ -7,9 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class DelegateRatingRequest {
-
     private Integer rideId;
     private Integer passId;
     private Integer driverId;
+
 }
 

@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RideRequest {
-
     private Integer rideId;
     private Integer driverId;
     private Float driverRating;
+
 }

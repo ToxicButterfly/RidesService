@@ -8,5 +8,5 @@ import lombok.*;
 @Data
 public class DriverRequest {
     private Integer id;
-
+    private String token;
 }

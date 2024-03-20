@@ -3,18 +3,24 @@ server:
 spring:
   application:
     name: rides-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/cab-aggregator-realm/protocol/openid-connect/certs
   data:
     mongodb:
-      host: localhost
+      host: mongodb
       port: 27017
       database: ridesdb
+      authentication-database: admin
   jpa:
     show-sql: false
     hibernate:
       ddl-auto: validate
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:29092
       group-id: rideGroup
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -23,11 +29,12 @@ spring:
           trusted.packages: "*"
           type.mapping: RideRequest:com.example.ridesservice.dto.request.RideRequest
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:29092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.type.mapping: ratingDelegation:com.example.ridesservice.dto.request.DelegateRatingRequest, paymentDelegation:com.example.ridesservice.dto.request.DelegatePaymentRequest, DriverRequest:com.example.ridesservice.dto.request.DriverRequest
+    bootstrap-servers: kafka:29092
 topic:
   name:
     driver: driver-search
@@ -39,3 +46,22 @@ kafka:
     count: 5
   replicas:
     count: 1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0
+jwt:
+  auth:
+    converter:
+      resource-id: cab-aggregator-client
+      principal-attribute: preferred_username
+logging:
+  level:
+    org.springframework.security: DEBUG

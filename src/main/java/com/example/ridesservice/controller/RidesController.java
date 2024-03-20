@@ -13,7 +13,7 @@ public class RidesController {
     final RidesService ridesService;
 
     @PostMapping("createTrip")
-    public void createTrip(@RequestBody PassengerRequestForRide request) {
-        ridesService.createTrip(request);
+    public void createTrip(@RequestBody PassengerRequestForRide request, @RequestHeader(value = "Authorization") String header) {
+        ridesService.createTrip(request, header);
     }
 }

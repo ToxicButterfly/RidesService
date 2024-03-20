@@ -11,5 +11,5 @@ public class DelegatePaymentRequest {
     private Integer passId;
     private Integer driverId;
     private Float cost;
-
+    private String token;
 }

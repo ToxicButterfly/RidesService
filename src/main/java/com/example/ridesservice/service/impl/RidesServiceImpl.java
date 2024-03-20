@@ -21,7 +21,7 @@ public class RidesServiceImpl implements RidesService {
     private final SequenceGeneratorService service;
     private final RidesProducer ridesProducer;
 
-    public void createTrip(PassengerRequestForRide request) {
+    public void createTrip(PassengerRequestForRide request, String header) {
 
         long time = System.currentTimeMillis();
         double length = sqrt(Math.pow(request.getCoor2X()- request.getCoorX(), 2) + Math.pow(request.getCoor2Y()- request.getCoorY(),2));
@@ -34,7 +34,7 @@ public class RidesServiceImpl implements RidesService {
                 .tripDuration(System.currentTimeMillis()-time/1000)
                 .build();
         Ride savedRide = ridesRepo.save(ride);
-        ridesProducer.sendMessage(new DriverRequest(savedRide.getId()));
+        ridesProducer.sendMessage(new DriverRequest(savedRide.getId(),header));
     }
 
     public void provideTrip(RideRequest request) {
@@ -42,16 +42,17 @@ public class RidesServiceImpl implements RidesService {
         Ride ride = ridesRepo.findById(request.getRideId()).get();
         ride.setDriverId(request.getDriverId());
         ride.setDriverRating(request.getDriverRating());
-        ridesRepo.save(remit(ride));
+        ridesRepo.save(remit(ride, request.getToken()));
         DelegateRatingRequest ratingRequest = DelegateRatingRequest.builder()
                 .rideId(ride.getId())
                 .driverId(ride.getDriverId())
                 .passId(ride.getPassengerId())
+                .token(request.getToken())
                 .build();
         ridesProducer.delegateRating(ratingRequest);
     }
 
-    private Ride remit(Ride ride) {
+    private Ride remit(Ride ride, String token) {
         float cost = (float) Math.round((int) Math.ceil(ride.getDriverRating()) * ride.getLength() * 100)/100;
         ride.setCost(cost);
         DelegatePaymentRequest request = DelegatePaymentRequest.builder()
@@ -59,6 +60,7 @@ public class RidesServiceImpl implements RidesService {
                 .driverId(ride.getDriverId())
                 .passId(ride.getPassengerId())
                 .cost(cost)
+                .token(token)
                 .build();
         ridesProducer.delegatePayment(request);
         return ride;
